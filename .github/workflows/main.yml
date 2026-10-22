@@ -12,13 +12,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout mã nguồn từ Repository
+      # 1. Checkout mã nguồn từ Repository (Dùng v4)
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      # 2. Cài đặt Node.js
+      # 2. Cài đặt Node.js (Dùng v4)
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: '18'
 
@@ -35,10 +35,10 @@ jobs:
             -r cli,htmlextra \
             --reporter-htmlextra-export newman/report.html
 
-      # 5. Xuất và lưu Báo cáo kết quả HTML
+      # 5. Xuất và lưu Báo cáo kết quả HTML (Dùng v4)
       - name: Upload Test Report Artifact
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: postman-html-report
           path: newman/report.html

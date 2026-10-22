@@ -27,7 +27,7 @@ jobs:
       - name: Run Postman Tests with Newman
         run: |
           newman run "2474802016546_NguyenMinhHuy_ReqRes.postman_collection.json" \
-            -e "2474802016546_NguyenMinhHuy_ReqRes_Env.postman_environment.json" \
+            -e "2474802016546_NguyenMinhHuy_ReqRes_Env.json" \
             --env-var "baseUrl=https://reqres.in" \
             -d users.csv \
             -r cli,htmlextra \

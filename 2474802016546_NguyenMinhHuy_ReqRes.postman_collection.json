@@ -1,0 +1,294 @@
+{
+  "info": {
+    "_postman_id": "86c94506-597d-4b05-acf3-ff862c51a438",
+    "name": "2474802016546_NguyenMinhHuy_ReqRes",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "59055577",
+    "_collection_link": "https://go.postman.co/collection/59055577-86c94506-597d-4b05-acf3-ff862c51a438?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Positive_Cases (Happy Path)",
+      "item": [
+        {
+          "name": "Create User (Tích hợp Data-Driven Testing)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// 1. Kiểm tra Status code trả về là 201 (Created)\npm.test(\"Status code is 201\", function () {\n    pm.response.to.have.status(201);\n});\n\n// 2. Kiểm tra trường name và job khớp với dữ liệu từ file CSV\npm.test(\"Validate name and job from CSV\", function () {\n    var jsonData = pm.response.json();\n    pm.expect(jsonData.name).to.eql(pm.iterationData.get(\"name\"));\n    pm.expect(jsonData.job).to.eql(pm.iterationData.get(\"job\"));\n});\n\n// 3. Trích xuất id trả về và gán vào biến môi trường userId\nvar jsonData = pm.response.json();\npm.environment.set(\"userId\", jsonData.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "free_user_3L2mLqy68hsggHQmWwqmpvooevW"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"{{name}}\",\n    \"job\": \"{{job}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/users",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "users"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Single User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// 1. Kiểm tra Status code là 200\npm.test(\"Status code is 200\", function () {\n    pm.response.to.have.status(200);\n});\n\n// 2. Kiểm tra trường data.id bằng 2 và email chứa đuôi @reqres.in\npm.test(\"Validate user data id and email domain\", function () {\n    var jsonData = pm.response.json();\n    pm.expect(jsonData.data.id).to.eql(2);\n    pm.expect(jsonData.data.email).to.include(\"@reqres.in\");\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/users/2",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "2"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"Validate updatedAt field exists\", function () {\n    var jsonData = pm.response.json();\n    pm.expect(jsonData).to.have.property('updatedAt');\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "free_user_3L2mLqy68hsggHQmWwqmpvooevW"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Minh Huy Updated\",\n    \"job\": \"QA Manager\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/users/{{userId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "{{userId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 204\", function () {\n    pm.response.to.have.status(204);\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "free_user_3L2mLqy68hsggHQmWwqmpvooevW"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/users/{{userId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "{{userId}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Negative_Cases (Xử lý lỗi hệ thống)",
+      "item": [
+        {
+          "name": "RegisterUnsuccessful",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {\n    pm.response.to.have.status(400);\n});\n\npm.test(\"Validate missing password error message\", function () {\n    var jsonData = pm.response.json();\n    pm.expect(jsonData.error).to.eql(\"Missing password\");\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "free_user_3L2mLqy68hsggHQmWwqmpvooevW"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"minhhuy2005@\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/register",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login Unsuccessful",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {\n    pm.response.to.have.status(400);\n});\n\npm.test(\"Validate missing email or username error\", function () {\n    var jsonData = pm.response.json();\n    pm.expect(jsonData.error).to.eql(\"Missing email or username\");\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "free_user_3L2mLqy68hsggHQmWwqmpvooevW"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "User Not Found",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 404\", function () {\n    pm.response.to.have.status(404);\n});\n\npm.test(\"Validate empty object response\", function () {\n    var jsonData = pm.response.json();\n    pm.expect(jsonData).to.be.an('object').that.is.empty;\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "free_user_3L2mLqy68hsggHQmWwqmpvooevW"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/users/23",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "23"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

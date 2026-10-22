@@ -28,7 +28,6 @@ jobs:
         run: |
           newman run "2474802016546_NguyenMinhHuy_ReqRes.postman_collection.json" \
             -e "2474802016546_NguyenMinhHuy_ReqRes_Env.json" \
-            --env-var "baseUrl=https://reqres.in" \
             -d users.csv \
             -r cli,htmlextra \
             --reporter-htmlextra-export newman/report.html
